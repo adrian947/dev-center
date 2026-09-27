@@ -1,0 +1,36 @@
+{
+  "name": "dev-center",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run build:shared && npm run dev --workspace backend",
+    "dev:frontend": "npm run build:shared && npm run dev --workspace frontend",
+    "build": "npm run build:shared && npm run build:backend && npm run build:frontend",
+    "build:shared": "npm run build --workspace shared",
+    "build:backend": "npm run build --workspace backend",
+    "build:frontend": "npm run build --workspace frontend",
+    "typecheck": "npm run build:shared && npm run typecheck --workspace backend && npm run typecheck --workspace frontend",
+    "lint": "eslint . --ext .ts,.vue",
+    "format": "prettier --write .",
+    "test": "npm run build:shared && npm run test --workspace backend && npm run test --workspace frontend",
+    "test:e2e": "playwright test",
+    "prisma:generate": "npm run prisma:generate --workspace backend",
+    "prisma:migrate": "npm run prisma:migrate --workspace backend"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-vue": "^9.30.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "vue-eslint-parser": "^9.4.3"
+  }
+}
