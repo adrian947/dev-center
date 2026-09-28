@@ -43,11 +43,12 @@ expectation, not a nice-to-have, for a developer-facing tool used for long stret
 ## Capabilities and Constraints
 
 - Auth: Google OAuth only; no email/password. Own JWT issued in an httpOnly cookie
-  after the OAuth handshake (see backend `src/config`).
-- Data model so far: only `User` exists (id, googleId, email, name, avatarUrl).
-  Task/Note/Project/Link/Activity/FavoriteTool/RecentTool are modeled in the plan
-  but **not yet implemented in the backend** (Prisma schema, migrations, or API) —
-  the dashboard being designed now has no real API to read from yet.
+  after the OAuth handshake (see backend `src/modules/auth`). Implemented: login,
+  callback, logout, `/api/auth/me`, and a router guard that redirects to `/login`.
+- Data model: `User`, `Task`, `Note`, `Project` are implemented end-to-end (Prisma
+  schema, migrations, REST API under `/api/tasks|notes|projects`, and full CRUD
+  pages in the frontend). `Link`/`Activity`/`FavoriteTool`/`RecentTool` are still
+  only modeled in the plan, not implemented.
 - i18n: Spanish default, English supported, `vue-i18n`, every visible string must go
   through translation keys (no hardcoded UI text).
 - Deploy: single Express service serves the API and the built Vue static bundle
@@ -64,10 +65,12 @@ confirmed visual world (open for new-work to define).
 
 ## Evidence on Hand
 
-No real tasks/notes/projects/links data exists yet (backend CRUD not built). The
-dashboard must be designed against representative placeholder/mock content and
-sensible empty states, not wired to live endpoints yet. No screenshots, testimonials,
-or brand assets exist. State: pre-launch, single early user (the builder).
+Tasks/Notes/Projects are live against the real API with full CRUD; the dedicated
+`/tasks`, `/notes`, `/projects` pages read and write real data. The dashboard still
+renders from representative mock content (`frontend/src/data/mockDashboard.ts`) and
+has not been rewired to the live endpoints yet. Links/Activity remain unimplemented.
+No screenshots, testimonials, or brand assets exist. State: pre-launch, single early
+user (the builder).
 
 ## Product Principles
 

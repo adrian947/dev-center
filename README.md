@@ -4,8 +4,9 @@ Dev Toolbox + Command Center personal. Monorepo con Vue 3 + TypeScript en el
 frontend, Express + TypeScript + Prisma en el backend, PostgreSQL (Neon en
 producción, contenedor local en desarrollo) y autenticación con Google OAuth.
 
-> Estado actual: **Fase 1 — Scaffold**. Autenticación, CRUD y Dev Toolbox se
-> implementan en fases posteriores (ver `docs`/plan del proyecto).
+> Estado actual: autenticación con Google OAuth y CRUD de Tareas/Notas/Proyectos
+> implementados. Links/Activity, Favoritos y el Dev Toolbox quedan para fases
+> posteriores (ver `docs`/plan del proyecto).
 
 ## Arquitectura en una frase
 
