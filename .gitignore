@@ -26,3 +26,11 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+
+# Installed agent-skill runtime (reproducible from skills-lock.json)
+.agents/
+.claude/skills/
+
+# Ephemeral impeccable design-review state (screenshots, decision-page logs)
+frontend/.impeccable/review/
+frontend/.impeccable/questions/

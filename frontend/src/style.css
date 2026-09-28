@@ -1,30 +1,129 @@
+/*
+  Mission Control / instrument-console world.
+  Dark ("console") is the native scheme; light ("daylight desk") reinterprets
+  the same panel language in ink-on-brushed-metal rather than a naive inversion.
+*/
+
 :root {
-  --dc-color-bg: #ffffff;
-  --dc-color-surface: #f6f7f9;
-  --dc-color-text: #1a1a1a;
-  --dc-color-accent: #6366f1;
-  --dc-radius: 8px;
-  --dc-spacing-sm: 8px;
-  --dc-spacing-md: 16px;
-  --dc-spacing-lg: 24px;
-  --dc-font-family:
-    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --dc-bg: #f3efe4;
+  --dc-bg-image:
+    radial-gradient(circle at 12% -10%, rgba(23, 21, 16, 0.05), transparent 40%);
+  --dc-panel-bg: #fbf9f3;
+  --dc-panel-bg-raised: #ffffff;
+  --dc-panel-border: #d9d0ba;
+  --dc-panel-border-strong: #bdb097;
+  --dc-hairline: rgba(23, 21, 16, 0.1);
+  --dc-text: #171510;
+  --dc-text-muted: #6b6151;
+  --dc-text-dim: #8c8573;
+  --dc-accent: #17803e;
+  --dc-accent-dim: #0b4620;
+  --dc-accent-glow: rgba(23, 128, 62, 0.18);
+  --dc-warning: #a35a12;
+  --dc-warning-glow: rgba(163, 90, 18, 0.16);
+  --dc-danger: #b3261e;
+  --dc-danger-glow: rgba(179, 38, 30, 0.16);
+
+  --dc-shadow-panel: 0 1px 2px rgba(23, 21, 16, 0.08), 0 6px 16px rgba(23, 21, 16, 0.06);
+  --dc-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  --dc-radius: 3px;
+  --dc-radius-lg: 4px;
+  --dc-space-3xs: 2px;
+  --dc-space-2xs: 4px;
+  --dc-space-xs: 8px;
+  --dc-space-sm: 12px;
+  --dc-space-md: 16px;
+  --dc-space-lg: 24px;
+  --dc-space-xl: 32px;
+  --dc-space-2xl: 48px;
+
+  --dc-font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --dc-font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --dc-nav-width: 220px;
+  --dc-strip-height: 44px;
+
+  color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --dc-color-bg: #111318;
-  --dc-color-surface: #1a1d24;
-  --dc-color-text: #e6e6e6;
-  --dc-color-accent: #818cf8;
+  --dc-bg: #0a0f0d;
+  --dc-bg-image:
+    radial-gradient(circle at 15% -20%, rgba(57, 255, 106, 0.05), transparent 45%);
+  --dc-panel-bg: #101613;
+  --dc-panel-bg-raised: #141c18;
+  --dc-panel-border: #232f29;
+  --dc-panel-border-strong: #34483f;
+  --dc-hairline: rgba(57, 255, 106, 0.08);
+  --dc-text: #eaf6ea;
+  --dc-text-muted: #7fa08d;
+  --dc-text-dim: #4d6b5a;
+  --dc-accent: #39ff6a;
+  --dc-accent-dim: #1f9b4c;
+  --dc-accent-glow: rgba(57, 255, 106, 0.25);
+  --dc-warning: #ffab4a;
+  --dc-warning-glow: rgba(255, 171, 74, 0.22);
+  --dc-danger: #ff6b6b;
+  --dc-danger-glow: rgba(255, 107, 107, 0.22);
+
+  --dc-shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.35);
+  --dc-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  color-scheme: dark;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
+body,
+#app {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  background: var(--dc-color-bg);
-  color: var(--dc-color-text);
-  font-family: var(--dc-font-family);
+  background: var(--dc-bg) var(--dc-bg-image);
+  color: var(--dc-text);
+  font-family: var(--dc-font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--dc-accent);
+  color: var(--dc-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--dc-accent);
+  outline-offset: 2px;
+}
+
+/* Tabular readouts (counts, clocks, durations) never jitter as digits change. */
+.dc-mono {
+  font-family: var(--dc-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dc-panel-border-strong);
+  border-radius: var(--dc-radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dc-accent-dim);
 }

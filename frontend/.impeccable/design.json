@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T21:40:00Z",
+  "title": "Design System: DevCenter",
+  "extensions": {
+    "colorMeta": {
+      "phosphor-accent": {
+        "role": "primary",
+        "displayName": "Phosphor Accent",
+        "canonical": "#39ff6a",
+        "tonalRamp": [
+          "#03160a",
+          "#0b4620",
+          "#10632f",
+          "#17803e",
+          "#1f9b4c",
+          "#5fe08c",
+          "#96edb3",
+          "#c9f6d8"
+        ]
+      },
+      "console-ground": {
+        "role": "neutral",
+        "displayName": "Console Ground",
+        "canonical": "#0a0f0d",
+        "tonalRamp": ["#000000", "#070a08", "#0a0f0d", "#101613", "#141c18", "#232f29", "#34483f", "#7fa08d"]
+      },
+      "warning-amber": {
+        "role": "status-warning",
+        "displayName": "Warning Amber",
+        "canonical": "#ffab4a"
+      },
+      "alert-red": {
+        "role": "status-danger",
+        "displayName": "Alert Red",
+        "canonical": "#ff6b6b"
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Dashboard greeting heading only." },
+      "body": { "displayName": "Body", "purpose": "Task titles, list content, panel copy." },
+      "label": { "displayName": "Label / Mono", "purpose": "Readout labels, clocks, dates, durations, kbd hints." }
+    },
+    "shadows": [
+      {
+        "name": "panel-inset",
+        "value": "inset 0 1px 0 rgba(255,255,255,0.04)",
+        "purpose": "Thin top bevel highlight on recessed instrument readout tiles (dark scheme)."
+      },
+      {
+        "name": "overlay-float",
+        "value": "0 1px 2px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.35)",
+        "purpose": "The command palette dialog only — the one element allowed a real drop shadow."
+      },
+      {
+        "name": "accent-glow",
+        "value": "0 0 8px rgba(57,255,106,0.25)",
+        "purpose": "Active status lights and the active nav indicator's glow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "console-boot",
+        "value": "opacity 0->1, translateY(6px)->0, 0.4s cubic-bezier(0.16,1,0.3,1), staggered 50ms per panel",
+        "purpose": "The dashboard's one signature entrance moment: header then panels light up in a single coordinated cascade, never scattered per-element fades."
+      },
+      {
+        "name": "nav-indicator-scale",
+        "value": "transform: scaleY(0)->scaleY(1), 0.15s ease",
+        "purpose": "Active nav-rail indicator grows in on transform, not height, to avoid layout thrash."
+      }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "1100px" },
+      { "name": "mobile", "value": "860px" },
+      { "name": "mobile-sm", "value": "640px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Filled phosphor-accent action button, used sparingly against the mostly text-button panel headers.",
+      "html": "<button class=\"ds-btn-primary\">Guardar</button>",
+      "css": ".ds-btn-primary { background: #39ff6a; color: #0a0f0d; border: 1px solid #39ff6a; border-radius: 3px; padding: 6px 14px; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.8125rem; font-weight: 500; transition: background 0.15s ease, transform 0.15s ease; } .ds-btn-primary:hover { background: #5fe08c; } .ds-btn-primary:focus-visible { outline: 2px solid #39ff6a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Status Tag",
+      "kind": "chip",
+      "refersTo": "tag-danger",
+      "description": "Priority/status tag: tinted background + solid text, never outline-only. Shown here in its danger (high priority / overdue) variant.",
+      "html": "<span class=\"ds-tag ds-tag-danger\">Alta</span>",
+      "css": ".ds-tag { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 2px; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; } .ds-tag-danger { background: rgba(239,68,68,0.16); color: #fca5a5; } .ds-tag-warn { background: rgba(255,171,74,0.16); color: #ffab4a; } .ds-tag-success { background: rgba(57,255,106,0.16); color: #39ff6a; }"
+    },
+    {
+      "name": "Console Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "The base dashboard panel: flat, hairline-bordered, no shadow. Each panel's internal content differs (table/list/grid) but the shell is shared.",
+      "html": "<section class=\"ds-panel\"><header class=\"ds-panel__header\"><h2>Bitácora de tareas</h2><button class=\"ds-panel__link\">Ver todas</button></header><div class=\"ds-panel__body\">…</div></section>",
+      "css": ".ds-panel { background: #101613; border: 1px solid #232f29; border-radius: 4px; padding: 16px; } .ds-panel__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; } .ds-panel__header h2 { margin: 0; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; color: #eaf6ea; } .ds-panel__link { background: none; border: none; color: #39ff6a; font-size: 0.8125rem; cursor: pointer; }"
+    },
+    {
+      "name": "Nav Rail Item",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "A single nav-rail row in its active state: hairline-tinted background plus a 3px phosphor indicator bar on the leading edge.",
+      "html": "<a class=\"ds-nav-item ds-nav-item--active\" href=\"#\"><span class=\"ds-nav-item__indicator\"></span><span>Command Center</span></a>",
+      "css": ".ds-nav-item { position: relative; display: flex; align-items: center; gap: 12px; padding: 8px 16px; color: #7fa08d; text-decoration: none; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 0.8125rem; } .ds-nav-item--active { color: #eaf6ea; background: rgba(57,255,106,0.08); font-weight: 500; } .ds-nav-item__indicator { position: absolute; left: 0; top: 50%; width: 3px; height: 60%; background: #39ff6a; transform: translateY(-50%); box-shadow: 0 0 8px rgba(57,255,106,0.25); }"
+    },
+    {
+      "name": "Command Dock",
+      "kind": "custom",
+      "refersTo": "command-dock",
+      "description": "The system's signature persistent bottom strip: current section, a ⌘K command trigger, and a live ticking mono clock.",
+      "html": "<footer class=\"ds-dock\"><span class=\"ds-dock__section\"><span class=\"ds-dock__dot\"></span>Command Center</span><button class=\"ds-dock__trigger\">⚡ Abrir command palette <kbd>⌘K</kbd></button><time class=\"ds-dock__clock\">21:32:40</time></footer>",
+      "css": ".ds-dock { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 44px; padding: 0 16px; background: #101613; border-top: 1px solid #232f29; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 0.75rem; color: #7fa08d; } .ds-dock__section { display: flex; align-items: center; gap: 4px; color: #eaf6ea; } .ds-dock__dot { width: 6px; height: 6px; border-radius: 999px; background: #39ff6a; box-shadow: 0 0 6px rgba(57,255,106,0.25); } .ds-dock__trigger { display: flex; align-items: center; gap: 8px; background: none; border: 1px solid transparent; border-radius: 3px; padding: 2px 12px; color: #7fa08d; cursor: pointer; } .ds-dock__trigger:hover { color: #eaf6ea; border-color: #34483f; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Mission Control Desk",
+    "overview": "DevCenter reads as a real instrument console, not another rounded-card SaaS dashboard. The product's own name — Command Center — is taken literally: a developer's daily tasks, notes, projects and tools surface as telemetry on a dim, glowing desk, the way an operator reads status off a panel rather than scrolling a feed. Density and precision come first; ornament does not. Dark (\"console\") is the native, default scheme — a room lit mostly by its own panels. Light (\"daylight desk\") is a genuine second rendition, not an inverted palette: brushed-steel panels on warm paper under daylight, ink readouts instead of glowing phosphor. Both share the same structure, radii, spacing and component language; only the material and glow change.",
+    "keyCharacteristics": [
+      "Near-black or warm-paper ground, never the default cool slate/gray SaaS neutral.",
+      "Squared, hairline-bordered panels — no soft rounded shadow cards.",
+      "Monospace reserved strictly for numerals, timestamps, and durations.",
+      "One accent (phosphor green) carries state; amber and red are reserved for warning/overdue signals only, never decoration."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Phosphor green is the only chromatic accent. Amber and red exist solely as status signals and are never used decoratively.", "section": "colors" },
+      { "name": "The Two Text Tiers Rule", "body": "Any string a person needs to actually read uses readout-phosphor or readout-phosphor-dim, never the dimmest gray tier — that is reserved for non-text decoration only.", "section": "colors" },
+      { "name": "The Measurement-Only Mono Rule", "body": "IBM Plex Mono is used exclusively for numerals, clocks, dates and durations — never as a generic technical-looking costume over prose.", "section": "typography" },
+      { "name": "The Border-Or-Shadow Rule", "body": "A static panel declares elevation with a hairline border. A shadow is reserved for things that are genuinely floating above the page — never both on the same element.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use IBM Plex Mono + font-variant-numeric: tabular-nums for any count, clock, date or duration.",
+      "Do give every dashboard panel a materially different internal structure suited to its content — not a repeated card shell.",
+      "Do reserve amber/red strictly for warning/overdue/high-priority signal, never as decoration.",
+      "Do declare elevation with a border on static panels; reserve shadow for genuinely floating overlays."
+    ],
+    "donts": [
+      "Don't add a kicker/eyebrow label above any heading.",
+      "Don't combine a hairline border with an ambient drop shadow on the same static panel (the \"ghost card\").",
+      "Don't use the dimmest neutral tier for any string a person needs to read.",
+      "Don't animate width/height/padding/margin for state changes; use transform/opacity."
+    ]
+  }
+}
