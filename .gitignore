@@ -26,6 +26,7 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+tests/e2e/.auth/
 
 # Installed agent-skill runtime (reproducible from skills-lock.json)
 .agents/
