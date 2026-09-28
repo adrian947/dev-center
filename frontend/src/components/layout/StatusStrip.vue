@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 import Button from "primevue/button";
 import Select from "primevue/select";
 import Menu from "primevue/menu";
 import Avatar from "primevue/avatar";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/i18n.js";
 import { useThemeStore } from "@/stores/theme.js";
+import { useAuthStore } from "@/stores/auth.js";
 import { useCommandPalette } from "@/composables/useCommandPalette.js";
 
 const { t, locale } = useI18n();
+const router = useRouter();
 const themeStore = useThemeStore();
+const authStore = useAuthStore();
 const commandPalette = useCommandPalette();
+
+const avatarLabel = computed(() => authStore.user?.name?.trim()?.[0]?.toUpperCase() ?? "?");
 
 const localeOptions = computed(() =>
   SUPPORTED_LOCALES.map((code) => ({ code, label: t(`language.${code}`) })),
@@ -26,8 +32,9 @@ const accountMenuItems = computed(() => [
   {
     label: t("topbar.logout"),
     icon: "pi pi-sign-out",
-    command: () => {
-      // Fase 2: cerrar sesión real vía POST /api/auth/logout
+    command: async () => {
+      await authStore.logout();
+      router.push({ name: "login" });
     },
   },
 ]);
@@ -79,7 +86,8 @@ function toggleAccountMenu(event: Event) {
         :aria-label="t('topbar.account')"
         @click="toggleAccountMenu"
       >
-        <Avatar label="A" shape="circle" />
+        <Avatar v-if="authStore.user?.avatarUrl" :image="authStore.user.avatarUrl" shape="circle" />
+        <Avatar v-else :label="avatarLabel" shape="circle" />
       </button>
       <Menu ref="accountMenu" :model="accountMenuItems" popup />
     </div>

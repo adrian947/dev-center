@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import PrimeVue from "primevue/config";
+import ToastService from "primevue/toastservice";
+import ConfirmationService from "primevue/confirmationservice";
 import "primeicons/primeicons.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@fontsource/ibm-plex-mono/500.css";
@@ -29,6 +31,8 @@ app.use(PrimeVue, {
     options: { darkModeSelector: "[data-theme='dark']" },
   },
 });
+app.use(ToastService);
+app.use(ConfirmationService);
 
 useThemeStore().init();
 
