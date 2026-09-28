@@ -24,8 +24,8 @@ test("command palette opens with Ctrl/Cmd+K and navigates", async ({ page }) => 
   const input = page.getByRole("combobox", { name: "Escribí un comando o buscá…" });
   await expect(input).toBeVisible();
 
-  await input.fill("tasks");
-  await page.getByRole("option", { name: "Tasks" }).click();
+  await input.fill("tareas");
+  await page.getByRole("option", { name: "Tareas" }).click();
 
   await expect(page).toHaveURL(/\/tasks$/);
 });

@@ -41,6 +41,7 @@
   --dc-font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --dc-font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
+  --dc-control-height: 36px;
   --dc-nav-width: 220px;
   --dc-strip-height: 44px;
 

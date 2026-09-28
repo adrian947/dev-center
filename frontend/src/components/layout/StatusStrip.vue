@@ -66,6 +66,7 @@ function toggleAccountMenu(event: Event) {
 
       <Button
         :aria-label="t('topbar.toggleTheme')"
+        class="status-strip__theme-btn"
         text
         rounded
         :icon="themeStore.theme === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
@@ -104,7 +105,8 @@ function toggleAccountMenu(event: Event) {
   flex: 1 1 auto;
   min-width: 0;
   max-width: 420px;
-  padding: var(--dc-space-2xs) var(--dc-space-sm);
+  height: var(--dc-control-height);
+  padding: 0 var(--dc-space-sm);
   background: var(--dc-bg);
   border: 1px solid var(--dc-panel-border);
   border-radius: var(--dc-radius);
@@ -112,6 +114,7 @@ function toggleAccountMenu(event: Event) {
   font-size: 0.8125rem;
   cursor: pointer;
   text-align: left;
+  box-sizing: border-box;
 }
 
 .status-strip__search:hover {
@@ -144,6 +147,28 @@ function toggleAccountMenu(event: Event) {
 
 .status-strip__locale {
   width: 8.5rem;
+  height: var(--dc-control-height);
+}
+
+.status-strip__locale :deep(.p-select-label) {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 var(--dc-space-sm);
+  font-size: 0.8125rem;
+  box-sizing: border-box;
+}
+
+.status-strip__locale :deep(.p-select) {
+  height: 100%;
+  background: var(--dc-bg);
+  border-color: var(--dc-panel-border);
+  border-radius: var(--dc-radius);
+}
+
+.status-strip__locale :deep(.p-select:not(.p-disabled).p-focus) {
+  border-color: var(--dc-accent);
+  box-shadow: none;
 }
 
 @media (max-width: 640px) {
@@ -160,7 +185,17 @@ function toggleAccountMenu(event: Event) {
   }
 }
 
+.status-strip__theme-btn {
+  width: var(--dc-control-height);
+  height: var(--dc-control-height);
+}
+
 .status-strip__avatar-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dc-control-height);
+  height: var(--dc-control-height);
   background: none;
   border: none;
   padding: 0;
@@ -173,6 +208,15 @@ function toggleAccountMenu(event: Event) {
   outline-offset: 2px;
 }
 
+.status-strip__avatar-trigger :deep(.p-avatar) {
+  width: 100%;
+  height: 100%;
+  background: var(--dc-hairline);
+  color: var(--dc-accent);
+  font-family: var(--dc-font-mono);
+  font-weight: 500;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -183,5 +227,55 @@ function toggleAccountMenu(event: Event) {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+</style>
+
+<style>
+/* Account menu popup teleports to <body>, so it can't be reached by a scoped style. */
+.p-menu {
+  background: var(--dc-panel-bg-raised);
+  border: 1px solid var(--dc-panel-border-strong);
+  border-radius: var(--dc-radius-lg);
+  box-shadow: var(--dc-shadow-panel);
+  min-width: 12rem;
+  padding: var(--dc-space-2xs);
+}
+
+.p-menu .p-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+  margin: 0;
+}
+
+.p-menu .p-menu-item-content {
+  border-radius: var(--dc-radius);
+}
+
+.p-menu .p-menu-item-link {
+  display: flex;
+  align-items: center;
+  gap: var(--dc-space-xs);
+  padding: var(--dc-space-xs) var(--dc-space-sm);
+  color: var(--dc-text);
+  font-size: 0.8125rem;
+  font-family: var(--dc-font-sans);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.p-menu .p-menu-item-icon {
+  color: var(--dc-text-muted);
+  font-size: 0.8125rem;
+}
+
+.p-menu .p-menu-item:not(.p-disabled) .p-menu-item-content:hover {
+  background: var(--dc-hairline);
+}
+
+.p-menu .p-menu-item:not(.p-disabled) .p-menu-item-content:hover .p-menu-item-icon,
+.p-menu .p-menu-item:not(.p-disabled) .p-menu-item-content:hover .p-menu-item-label {
+  color: var(--dc-accent);
 }
 </style>
