@@ -10,6 +10,7 @@ import { logger } from "./utils/logger.js";
 import { apiRouter } from "./routes/index.js";
 import { notFound } from "./middleware/notFound.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { passport } from "./modules/auth/passport.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");
@@ -27,6 +28,7 @@ export function createApp(): Express {
   app.use(cookieParser());
   app.use(express.json());
   app.use(pinoHttp({ logger }));
+  app.use(passport.initialize());
 
   app.use("/api", apiRouter);
   app.use("/api", notFound);
