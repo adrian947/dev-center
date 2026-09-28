@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 import Tag from "primevue/tag";
 import Button from "primevue/button";
-import {
-  mockNotes,
-  mockProjects,
-  mockTasks,
-  mockTools,
-  isDueToday,
-  isOverdue,
-} from "@/data/mockDashboard.js";
+import type { Task } from "@devcenter/shared";
+import { useTasksQuery } from "@/composables/useTasks.js";
+import { useNotesQuery } from "@/composables/useNotes.js";
+import { useProjectsQuery } from "@/composables/useProjects.js";
+import { mockTools } from "@/data/mockDashboard.js";
 
 const { t, locale } = useI18n();
+const router = useRouter();
+
+const { data: tasksData, isLoading: tasksLoading } = useTasksQuery();
+const { data: projectsData, isLoading: projectsLoading } = useProjectsQuery();
+const { data: notesData, isLoading: notesLoading } = useNotesQuery();
+
+const tasks = computed(() => tasksData.value ?? []);
+const projects = computed(() => projectsData.value ?? []);
+const notes = computed(() => notesData.value ?? []);
 
 const now = new Date();
 
@@ -31,13 +38,26 @@ const formattedDate = computed(() =>
   }).format(now),
 );
 
-const pendingCount = computed(
-  () => mockTasks.filter((task) => task.status !== "DONE").length,
-);
-const overdueCount = computed(() => mockTasks.filter(isOverdue).length);
-const dueTodayCount = computed(() => mockTasks.filter(isDueToday).length);
+function isOverdue(task: Task): boolean {
+  if (!task.dueDate || task.status === "DONE") return false;
+  return new Date(task.dueDate).setHours(23, 59, 59, 999) < Date.now();
+}
+
+function isDueToday(task: Task): boolean {
+  if (!task.dueDate) return false;
+  const due = new Date(task.dueDate);
+  return (
+    due.getFullYear() === now.getFullYear() &&
+    due.getMonth() === now.getMonth() &&
+    due.getDate() === now.getDate()
+  );
+}
+
+const pendingCount = computed(() => tasks.value.filter((task) => task.status !== "DONE").length);
+const overdueCount = computed(() => tasks.value.filter(isOverdue).length);
+const dueTodayCount = computed(() => tasks.value.filter(isDueToday).length);
 const activeProjectsCount = computed(
-  () => mockProjects.filter((project) => project.status === "ACTIVE").length,
+  () => projects.value.filter((project) => project.status === "ACTIVE").length,
 );
 
 const readouts = computed(() => [
@@ -47,7 +67,40 @@ const readouts = computed(() => [
   { key: "activeProjects", value: activeProjectsCount.value, tone: "accent" },
 ]);
 
-function taskDueLabel(task: (typeof mockTasks)[number]): string {
+const dashboardTasks = computed(() => {
+  return [...tasks.value]
+    .sort((a, b) => {
+      const doneRank = (task: Task) => (task.status === "DONE" ? 1 : 0);
+      if (doneRank(a) !== doneRank(b)) return doneRank(a) - doneRank(b);
+      const overdueRank = (task: Task) => (isOverdue(task) ? 0 : 1);
+      if (overdueRank(a) !== overdueRank(b)) return overdueRank(a) - overdueRank(b);
+      if (!a.dueDate && !b.dueDate) return 0;
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+    })
+    .slice(0, 6);
+});
+
+const dashboardProjects = computed(() => {
+  return [...projects.value]
+    .sort((a, b) => (a.status === "ACTIVE" ? 0 : 1) - (b.status === "ACTIVE" ? 0 : 1))
+    .slice(0, 5);
+});
+
+const dashboardNotes = computed(() => notes.value.slice(0, 4));
+
+function projectName(projectId: string | null): string | null {
+  if (!projectId) return null;
+  return projects.value.find((project) => project.id === projectId)?.name ?? null;
+}
+
+function noteExcerpt(content: string): string {
+  const trimmed = content.trim();
+  return trimmed.length > 90 ? `${trimmed.slice(0, 90)}…` : trimmed;
+}
+
+function taskDueLabel(task: Task): string {
   if (!task.dueDate) return t("dashboard.tasks.noDueDate");
   if (isOverdue(task)) return t("dashboard.tasks.overdue");
   if (isDueToday(task)) return t("dashboard.tasks.dueToday");
@@ -97,12 +150,13 @@ function projectTagStyle(status: string): string {
       <section class="panel panel--tasks">
         <div class="panel__header">
           <h2>{{ t("dashboard.tasks.title") }}</h2>
-          <Button :label="t('dashboard.tasks.viewAll')" text size="small" />
+          <Button :label="t('dashboard.tasks.viewAll')" text size="small" @click="router.push('/tasks')" />
         </div>
 
-        <table v-if="mockTasks.length" class="task-log">
+        <p v-if="tasksLoading" class="panel__empty">{{ t("common.loading") }}</p>
+        <table v-else-if="dashboardTasks.length" class="task-log">
           <tbody>
-            <tr v-for="task in mockTasks" :key="task.id">
+            <tr v-for="task in dashboardTasks" :key="task.id">
               <td class="task-log__status">
                 <span
                   class="status-light"
@@ -113,7 +167,7 @@ function projectTagStyle(status: string): string {
               <td class="task-log__title">
                 <span>{{ task.title }}</span>
                 <span class="task-log__project dc-mono">{{
-                  task.projectName ?? t("dashboard.tasks.project")
+                  projectName(task.projectId) ?? t("dashboard.tasks.project")
                 }}</span>
               </td>
               <td class="task-log__priority">
@@ -137,17 +191,18 @@ function projectTagStyle(status: string): string {
       <section class="panel panel--projects">
         <div class="panel__header">
           <h2>{{ t("dashboard.projects.title") }}</h2>
-          <Button :label="t('dashboard.projects.viewAll')" text size="small" />
+          <Button :label="t('dashboard.projects.viewAll')" text size="small" @click="router.push('/projects')" />
         </div>
 
-        <ul v-if="mockProjects.length" class="project-band">
-          <li v-for="project in mockProjects" :key="project.id" class="project-band__item">
+        <p v-if="projectsLoading" class="panel__empty">{{ t("common.loading") }}</p>
+        <ul v-else-if="dashboardProjects.length" class="project-band">
+          <li v-for="project in dashboardProjects" :key="project.id" class="project-band__item">
             <span class="project-band__name">{{ project.name }}</span>
             <span class="project-band__count dc-mono">
               {{
                 t("dashboard.projects.openTasks", {
-                  open: project.openTasks,
-                  total: project.totalTasks,
+                  open: project.openTaskCount,
+                  total: project.taskCount,
                 })
               }}
             </span>
@@ -163,13 +218,14 @@ function projectTagStyle(status: string): string {
       <section class="panel panel--notes">
         <div class="panel__header">
           <h2>{{ t("dashboard.notes.title") }}</h2>
-          <Button :label="t('dashboard.notes.viewAll')" text size="small" />
+          <Button :label="t('dashboard.notes.viewAll')" text size="small" @click="router.push('/notes')" />
         </div>
 
-        <ul v-if="mockNotes.length" class="note-margin">
-          <li v-for="note in mockNotes" :key="note.id" class="note-margin__item">
+        <p v-if="notesLoading" class="panel__empty">{{ t("common.loading") }}</p>
+        <ul v-else-if="dashboardNotes.length" class="note-margin">
+          <li v-for="note in dashboardNotes" :key="note.id" class="note-margin__item">
             <span class="note-margin__title">{{ note.title }}</span>
-            <span class="note-margin__excerpt">{{ note.excerpt }}</span>
+            <span class="note-margin__excerpt">{{ noteExcerpt(note.content) }}</span>
           </li>
         </ul>
         <p v-else class="panel__empty">{{ t("dashboard.notes.empty") }}</p>
