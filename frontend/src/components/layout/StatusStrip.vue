@@ -1,0 +1,187 @@
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import Button from "primevue/button";
+import Select from "primevue/select";
+import Menu from "primevue/menu";
+import Avatar from "primevue/avatar";
+import { SUPPORTED_LOCALES, type SupportedLocale } from "@/i18n.js";
+import { useThemeStore } from "@/stores/theme.js";
+import { useCommandPalette } from "@/composables/useCommandPalette.js";
+
+const { t, locale } = useI18n();
+const themeStore = useThemeStore();
+const commandPalette = useCommandPalette();
+
+const localeOptions = computed(() =>
+  SUPPORTED_LOCALES.map((code) => ({ code, label: t(`language.${code}`) })),
+);
+
+function setLocale(code: SupportedLocale) {
+  locale.value = code;
+}
+
+const accountMenu = ref();
+const accountMenuItems = computed(() => [
+  {
+    label: t("topbar.logout"),
+    icon: "pi pi-sign-out",
+    command: () => {
+      // Fase 2: cerrar sesión real vía POST /api/auth/logout
+    },
+  },
+]);
+
+function toggleAccountMenu(event: Event) {
+  accountMenu.value?.toggle(event);
+}
+</script>
+
+<template>
+  <header class="status-strip">
+    <button
+      type="button"
+      class="status-strip__search"
+      @click="commandPalette.open()"
+    >
+      <i class="pi pi-search" aria-hidden="true" />
+      <span>{{ t("topbar.searchPlaceholder") }}</span>
+      <kbd class="status-strip__kbd dc-mono">⌘K</kbd>
+    </button>
+
+    <div class="status-strip__actions">
+      <Select
+        input-id="locale-select"
+        aria-labelledby="locale-select-label"
+        :model-value="locale"
+        :options="localeOptions"
+        option-label="label"
+        option-value="code"
+        class="status-strip__locale"
+        @update:model-value="setLocale"
+      />
+      <label id="locale-select-label" for="locale-select" class="sr-only">{{
+        t("language.label")
+      }}</label>
+
+      <Button
+        :aria-label="t('topbar.toggleTheme')"
+        text
+        rounded
+        :icon="themeStore.theme === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
+        @click="themeStore.toggle()"
+      />
+
+      <button
+        type="button"
+        class="status-strip__avatar-trigger"
+        :aria-label="t('topbar.account')"
+        @click="toggleAccountMenu"
+      >
+        <Avatar label="A" shape="circle" />
+      </button>
+      <Menu ref="accountMenu" :model="accountMenuItems" popup />
+    </div>
+  </header>
+</template>
+
+<style scoped>
+.status-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dc-space-md);
+  height: 52px;
+  padding: 0 var(--dc-space-md);
+  background: var(--dc-panel-bg);
+  border-bottom: 1px solid var(--dc-panel-border);
+}
+
+.status-strip__search {
+  display: flex;
+  align-items: center;
+  gap: var(--dc-space-xs);
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 420px;
+  padding: var(--dc-space-2xs) var(--dc-space-sm);
+  background: var(--dc-bg);
+  border: 1px solid var(--dc-panel-border);
+  border-radius: var(--dc-radius);
+  color: var(--dc-text-muted);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.status-strip__search:hover {
+  border-color: var(--dc-panel-border-strong);
+  color: var(--dc-text);
+}
+
+.status-strip__search span {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-strip__kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--dc-panel-border-strong);
+  border-radius: var(--dc-radius);
+  font-size: 0.6875rem;
+  color: var(--dc-text-muted);
+}
+
+.status-strip__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--dc-space-xs);
+  flex: 0 0 auto;
+}
+
+.status-strip__locale {
+  width: 8.5rem;
+}
+
+@media (max-width: 640px) {
+  .status-strip__search span {
+    display: none;
+  }
+
+  .status-strip__kbd {
+    display: none;
+  }
+
+  .status-strip__locale {
+    width: 4.25rem;
+  }
+}
+
+.status-strip__avatar-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+.status-strip__avatar-trigger:focus-visible {
+  outline: 2px solid var(--dc-accent);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
