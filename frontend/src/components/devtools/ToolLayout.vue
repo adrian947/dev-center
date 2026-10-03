@@ -9,6 +9,7 @@ const props = defineProps<{
   toolId: ToolId;
   icon: string;
   description?: string;
+  wide?: boolean;
 }>();
 
 const { t } = useI18n();
@@ -18,7 +19,7 @@ onMounted(() => trackUse(props.toolId));
 </script>
 
 <template>
-  <div class="tool-page">
+  <div class="tool-page" :class="{ 'tool-page--wide': wide }">
     <header class="page-header">
       <div>
         <RouterLink to="/devtools" class="page-header__back">
@@ -50,6 +51,10 @@ onMounted(() => trackUse(props.toolId));
   padding: var(--dc-space-lg);
   max-width: 900px;
   margin: 0 auto;
+}
+
+.tool-page--wide {
+  max-width: 1400px;
 }
 
 .page-header {
