@@ -8,7 +8,8 @@ import type { Task } from "@devcenter/shared";
 import { useTasksQuery } from "@/composables/useTasks.js";
 import { useNotesQuery } from "@/composables/useNotes.js";
 import { useProjectsQuery } from "@/composables/useProjects.js";
-import { mockTools } from "@/data/mockDashboard.js";
+import { useToolUsage } from "@/composables/useToolUsage.js";
+import { DEV_TOOLS } from "@/data/devtools.js";
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -20,6 +21,15 @@ const { data: notesData, isLoading: notesLoading } = useNotesQuery();
 const tasks = computed(() => tasksData.value ?? []);
 const projects = computed(() => projectsData.value ?? []);
 const notes = computed(() => notesData.value ?? []);
+
+const { recents } = useToolUsage();
+
+const recentTools = computed(() =>
+  recents.value.flatMap((entry) => {
+    const tool = DEV_TOOLS.find((candidate) => candidate.id === entry.toolId);
+    return tool ? [tool] : [];
+  }),
+);
 
 const now = new Date();
 
@@ -237,10 +247,16 @@ function projectTagStyle(status: string): string {
           <Button :label="t('dashboard.tools.viewAll')" text size="small" />
         </div>
 
-        <ul v-if="mockTools.length" class="qsl-wall">
-          <li v-for="tool in mockTools" :key="tool.id" class="qsl-wall__card">
-            <i class="pi" :class="tool.icon" aria-hidden="true" />
-            <span>{{ tool.name }}</span>
+        <ul v-if="recentTools.length" class="qsl-wall">
+          <li v-for="tool in recentTools" :key="tool.id">
+            <component
+              :is="tool.route ? 'RouterLink' : 'div'"
+              :to="tool.route"
+              class="qsl-wall__card"
+            >
+              <i class="pi" :class="tool.icon" aria-hidden="true" />
+              <span>{{ t(`devtools.tools.${tool.id}`) }}</span>
+            </component>
           </li>
         </ul>
         <p v-else class="panel__empty">{{ t("dashboard.tools.empty") }}</p>
@@ -567,6 +583,12 @@ function projectTagStyle(status: string): string {
   font-size: 0.75rem;
   color: var(--dc-text-muted);
   text-align: center;
+  text-decoration: none;
+}
+
+a.qsl-wall__card:hover {
+  color: var(--dc-text);
+  border-color: var(--dc-panel-border-strong);
 }
 
 .qsl-wall__card i {

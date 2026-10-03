@@ -1,5 +1,7 @@
+import type { ToolId } from "@devcenter/shared";
+
 export interface DevToolMeta {
-  id: string;
+  id: ToolId;
   icon: string;
   route?: string;
 }

@@ -60,7 +60,7 @@ const router = createRouter({
         {
           path: "favorites",
           name: "favorites",
-          component: () => import("../views/ComingSoonView.vue"),
+          component: () => import("../views/FavoritesView.vue"),
           meta: { navKey: "favorites" },
         },
         {

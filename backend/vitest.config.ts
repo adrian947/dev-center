@@ -6,6 +6,7 @@ export default defineConfig({
     include: ["src/**/*.test.ts"],
     env: {
       NODE_ENV: "test",
+      SESSION_SECRET: "test-session-secret",
       DATABASE_URL: "postgresql://devcenter:devcenter@localhost:5432/devcenter_test",
     },
   },
