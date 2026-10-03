@@ -106,12 +106,23 @@ export default {
     title: "Todavía no está en el aire",
     subtitle: "Esta sección se construye en una fase posterior del proyecto.",
   },
+  favoritesPage: {
+    title: "Favoritos",
+    subtitle: "Tus herramientas marcadas con estrella.",
+    empty: "Todavía no marcaste ninguna herramienta como favorita.",
+  },
   devtools: {
     title: "Caja de Herramientas",
     subtitle: "Utilidades dev que corren 100% en el navegador — nada de esto toca el backend.",
     comingSoon: "Próximamente",
     available: "Disponible",
     backToToolbox: "Caja de Herramientas",
+    favorite: {
+      add: "Agregar a favoritos",
+      remove: "Quitar de favoritos",
+      addNamed: "Agregar {name} a favoritos",
+      removeNamed: "Quitar {name} de favoritos",
+    },
     tools: {
       json: "JSON Formatter",
       jwt: "JWT Decoder",

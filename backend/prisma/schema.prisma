@@ -8,7 +8,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Link/Activity/FavoriteTool/RecentTool quedan para una fase posterior.
+// Link/Activity quedan para una fase posterior.
 
 enum TaskStatus {
   TODO
@@ -41,6 +41,9 @@ model User {
   tasks    Task[]
   notes    Note[]
   projects Project[]
+
+  favoriteTools FavoriteTool[]
+  recentTools   RecentTool[]
 
   @@map("users")
 }
@@ -99,4 +102,29 @@ model Note {
   @@index([userId])
   @@index([projectId])
   @@map("notes")
+}
+
+model FavoriteTool {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, toolId])
+  @@index([userId])
+  @@map("favorite_tools")
+}
+
+model RecentTool {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolId     String
+  lastUsedAt DateTime @default(now())
+  useCount   Int      @default(1)
+
+  @@unique([userId, toolId])
+  @@index([userId, lastUsedAt])
+  @@map("recent_tools")
 }

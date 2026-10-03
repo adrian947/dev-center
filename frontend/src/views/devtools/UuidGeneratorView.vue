@@ -5,6 +5,7 @@ import { useToast } from "primevue/usetoast";
 import Button from "primevue/button";
 import InputNumber from "primevue/inputnumber";
 import ToggleButton from "primevue/togglebutton";
+import ToolLayout from "@/components/devtools/ToolLayout.vue";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -43,18 +44,7 @@ generate();
 </script>
 
 <template>
-  <div class="uuid-page">
-    <header class="page-header">
-      <div>
-        <RouterLink to="/devtools" class="page-header__back">
-          <i class="pi pi-arrow-left" aria-hidden="true" />
-          {{ t("devtools.backToToolbox") }}
-        </RouterLink>
-        <h1><i class="pi pi-sparkles" aria-hidden="true" /> {{ t("devtools.tools.uuid") }}</h1>
-        <p class="page-header__subtitle">{{ t("devtools.uuid.description") }}</p>
-      </div>
-    </header>
-
+  <ToolLayout tool-id="uuid" icon="pi-sparkles" :description="t('devtools.uuid.description')">
     <div class="toolbar">
       <label class="toolbar__field">
         <span>{{ t("devtools.uuid.quantity") }}</span>
@@ -85,54 +75,10 @@ generate();
         </li>
       </ul>
     </div>
-  </div>
+  </ToolLayout>
 </template>
 
 <style scoped>
-.uuid-page {
-  padding: var(--dc-space-lg);
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.page-header {
-  margin-bottom: var(--dc-space-lg);
-}
-
-.page-header__back {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--dc-space-3xs);
-  margin-bottom: var(--dc-space-sm);
-  color: var(--dc-text-muted);
-  text-decoration: none;
-  font-size: 0.8125rem;
-}
-
-.page-header__back:hover {
-  color: var(--dc-text);
-}
-
-.page-header h1 {
-  display: flex;
-  align-items: center;
-  gap: var(--dc-space-xs);
-  margin: 0 0 var(--dc-space-3xs);
-  font-size: 1.375rem;
-  font-weight: 600;
-}
-
-.page-header h1 i {
-  color: var(--dc-accent);
-  font-size: 1.125rem;
-}
-
-.page-header__subtitle {
-  margin: 0;
-  color: var(--dc-text-muted);
-  font-size: 0.8125rem;
-}
-
 .toolbar {
   display: flex;
   align-items: flex-end;

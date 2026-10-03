@@ -106,12 +106,23 @@ export default {
     title: "Not live yet",
     subtitle: "This section is built in a later phase of the project.",
   },
+  favoritesPage: {
+    title: "Favorites",
+    subtitle: "Your starred tools.",
+    empty: "You have not starred any tool yet.",
+  },
   devtools: {
     title: "Dev Toolbox",
     subtitle: "Dev utilities that run 100% in the browser — none of this touches the backend.",
     comingSoon: "Coming soon",
     available: "Available",
     backToToolbox: "Dev Toolbox",
+    favorite: {
+      add: "Add to favorites",
+      remove: "Remove from favorites",
+      addNamed: "Add {name} to favorites",
+      removeNamed: "Remove {name} from favorites",
+    },
     tools: {
       json: "JSON Formatter",
       jwt: "JWT Decoder",
