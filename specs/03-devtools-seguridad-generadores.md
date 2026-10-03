@@ -1,6 +1,6 @@
 # SPEC 03 — Dev Toolbox: seguridad y generadores
 
-> **Status:** Borrador
+> **Status:** Aprobado
 > **Depends on:** SPEC 01
 > **Date:** 2026-10-03
 > **Objective:** Implementar 6 herramientas de seguridad y generación (JWT, hash, contraseñas, tokens, datos falsos, QR) que corren 100% en el navegador.
